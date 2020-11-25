@@ -1,0 +1,337 @@
+@import './scss/fonts';
+@import './scss/mixins';
+@import './scss/layout';
+@import './scss/variables';
+
+.card {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid $gray-noon;
+  border-radius: 6px;
+  background-color: $white;
+  box-shadow: $box-shadow;
+  overflow: hidden;
+
+  h2 {
+    display: flex;
+    align-items: center;
+  }
+
+  h3 {
+    display: flex;
+    align-items: center;
+  }
+
+  .card--header-count {
+    @include font-size(12px);
+
+    display: flex;
+    align-items: center;
+    height: 24px;
+    margin-left: 20px;
+    padding: 0px 8px;
+    border-radius: 6px;
+    background-color: $gray-light;
+    color: $gray;
+    font-family: $metropolis;
+    font-weight: bold;
+    white-space: nowrap;
+
+    &.card--header-count__success {
+      background-color: #73b183;
+      color: $white;
+    }
+
+    &.card--header-count__warning {
+      background-color: $warning;
+      color: $white;
+    }
+
+    &.card--header-count__error {
+      background-color: $danger;
+      color: $white;
+    }
+  }
+
+  .card--header-info {
+    @include font-size(12px, 12px);
+
+    margin-left: 20px;
+    font-family: $metropolis;
+  }
+
+  .card--header {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    min-height: 50px;
+    margin: 20px 26px 0px 26px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid $gray-noon;
+
+    @include phone-down {
+      min-height: unset;
+      margin: 20px 20px 0 20px;
+    }
+
+
+    &.card--header__space-between {
+      justify-content: space-between;
+    }
+
+    &.card--header-secondary {
+      min-height: auto;
+      margin: 0px 0px 0px 26px;
+      padding: 0;
+      border: 0;
+    }
+  }
+
+  p {
+    @include font-size(14px);
+
+    color: $gray;
+    font-family: $metropolis;
+  }
+
+  .card--content {
+    padding: 20px 30px;
+
+    @include phone-down {
+      padding: 15px 20px;
+    }
+  }
+
+  .card--inline-row + .card--inline-row {
+    margin-top: 23px;
+  }
+
+  .card--action {
+    @include font-size(12px);
+
+    padding: 11px;
+    border: 1px solid $gray;
+    border-radius: 6px;
+    background: transparent;
+    color: $gray;
+    font-family: $inter;
+    font-weight: bold;
+    cursor: pointer;
+
+    &:disabled {
+      opacity: 0.3;
+      pointer-events: none;
+    }
+  }
+
+  .card--action__busy {
+    @include font-size(12px);
+
+    margin-left: 20px;
+    color: $main-green;
+    font-family: $metropolis;
+    font-weight: bold;
+  }
+
+  .card--action + .card--action {
+    margin-left: 10px;
+  }
+
+  .card--label {
+    @include font-size(12px);
+
+    display: flex;
+    align-items: center;
+    height: 32px;
+    color: $gray-header;
+    font-family: $metropolis;
+    font-weight: bold;
+    text-transform: uppercase;
+    white-space: nowrap;
+
+    button {
+      @include font-size(12px);
+
+      padding: 0;
+      border: 0;
+      background: none;
+      color: inherit;
+      font-family: inherit;
+      font-size: inherit;
+      font-weight: inherit;
+      text-align: left;
+      text-transform: inherit;
+      cursor: pointer;
+
+      &:hover {
+        color: $main-green-highlight;
+        text-decoration: underline;
+      }
+
+      &:focus {
+        box-shadow: none;
+      }
+    }
+
+    &.card--label__no-case {
+      text-transform: none;
+    }
+  }
+
+  .card--value {
+    @include font-size(12px);
+
+    margin-bottom: 12px;
+    color: $gray-10;
+    font-family: $inter;
+    word-break: break-all;
+
+    &.card--value__highlight {
+      @include font-size(12px);
+
+      color: $main-green;
+      font-weight: bold;
+    }
+
+    .card--value__secondary {
+      @include font-size(12px);
+
+      color: $main-green;
+    }
+
+    .card--value__tertiary {
+      @include font-size(10px);
+
+      color: $main-green;
+      font-weight: normal;
+    }
+
+    &.card--value__light,
+    .card--value__light {
+      color: $gray;
+    }
+
+    a,
+    button {
+      &:hover {
+        .card--value__light {
+          color: lighten($main-green-highlight, 10%);
+        }
+      }
+    }
+
+    &.card--value__large,
+    .card--value__large {
+      @include font-size(18px);
+    }
+
+    &.card--value-textarea {
+      min-height: 150px;
+      max-height: 150px;
+      padding: 10px;
+      background: $gray-noon;
+      overflow: auto;
+
+      &.card--value-textarea__ascii {
+        max-height: 350px;
+        white-space: pre-wrap;
+      }
+
+      &.card--value-textarea__hex {
+        max-height: 350px;
+        font-family: 'Courier New', Courier, monospace;
+        white-space: pre-wrap;
+        word-break: break-word;
+      }
+
+      &.card--value-textarea__json {
+        max-height: 350px;
+        font-family: 'Courier New', Courier, monospace;
+        white-space: pre-wrap;
+      }
+
+      &.card--value-textarea__tall {
+        max-height: 280px;
+      }
+    }
+
+    input {
+      &[type='checkbox'] {
+        @include font-size(24px);
+
+        width: 24px;
+        height: 24px;
+        padding: 0;
+        font-weight: bold;
+        vertical-align: middle;
+        appearance: none;
+
+        &:checked {
+          &::after {
+            position: relative;
+            bottom: 4px;
+            left: 0px;
+            color: $main-green;
+            content: '\2713';
+          }
+        }
+      }
+    }
+
+    button {
+      @include font-size(12px);
+
+      padding: 0;
+      border: 0;
+      background: none;
+      color: inherit;
+      font-family: inherit;
+      font-size: inherit;
+      font-weight: inherit;
+      text-align: left;
+      cursor: pointer;
+
+      &:hover {
+        color: $main-green-highlight;
+        text-decoration: underline;
+      }
+
+      &:focus {
+        box-shadow: none;
+      }
+
+      &:disabled {
+        cursor: default;
+        opacity: 0.3;
+      }
+    }
+
+    a {
+      @include font-size(12px);
+
+      color: inherit;
+      font-family: inherit;
+      font-size: inherit;
+      font-weight: inherit;
+      text-align: left;
+      text-decoration: none;
+      cursor: pointer;
+
+      &:hover {
+        color: $main-green-highlight;
+        text-decoration: underline;
+      }
+
+      &:focus {
+        box-shadow: none;
+      }
+
+      &:disabled,
+      &.disabled {
+        cursor: default;
+        opacity: 0.3;
+        pointer-events: none;
+      }
+    }
+  }
+}

@@ -1,0 +1,26 @@
+@import '../../scss/fonts';
+@import '../../scss/mixins';
+@import '../../scss/media-queries';
+@import '../../scss/variables';
+
+.reading {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: stretch;
+
+  .annotation {
+    display: flex;
+    flex: 1;
+    flex-direction: row;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+    margin-left: 40px;
+  }
+
+  .annotation + .annotation {
+    padding-top: 20px;
+    border-top: 1px solid $gray-light;
+  }
+}

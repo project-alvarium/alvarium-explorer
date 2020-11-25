@@ -1,0 +1,59 @@
+### GET the channel address
+
+GET http://127.0.0.1:8080/get_channel_address
+Content-Type: application/json
+
+### GET the announcement id
+
+GET http://127.0.0.1:8080/get_announcement_id
+Content-Type: application/json
+
+### Subscribe
+
+POST http://127.0.0.1:8080/subscribe
+Content-Type: application/json
+
+{ 
+    "msgid": "s1", 
+    "pk": "d2236484009f351af4628d73" 
+}
+
+### Read Sensor Id
+
+POST http://127.0.0.1:8080/get_readings
+Content-Type: application/json
+
+{ 
+    "sensor_id": "s1"
+}
+
+### POST annotations
+
+POST http://127.0.0.1:8080/get_annotations
+Content-Type: application/json
+
+{ 
+    "reading_id": "02"
+}
+
+### POST confidence score
+
+POST http://127.0.0.1:8080/get_confidence_score
+Content-Type: application/json
+
+{ 
+    "reading_id": "01"
+}
+
+### POST filtered annotations
+
+POST http://127.0.0.1:8080/get_filtered_annotations
+Content-Type: application/json
+
+{ 
+    "sub": "AlvariumSensorId",
+    "iat": null,
+    "jti": null,
+    "ann": null
+}
+
