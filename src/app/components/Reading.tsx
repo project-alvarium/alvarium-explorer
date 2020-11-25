@@ -38,8 +38,21 @@ class Reading extends Component<ReadingProps, ReadingState> {
     /**
      * The component mounted.
      */
-    public async componentDidMount(): Promise<void> {
-        await this.findData();
+    public componentDidMount(): void {
+        if (this.props.isActive) {
+            this.findData();
+        }
+    }
+
+    /**
+     * Component will update.
+     */
+    public componentDidUpdate(): void {
+        if (this.props.isActive) {
+            this.findData();
+        } else {
+            this.stopData();
+        }
     }
 
     /**
@@ -127,8 +140,9 @@ class Reading extends Component<ReadingProps, ReadingState> {
     /**
      * Find the data.
      */
-    private async findData(): Promise<void> {
-        await this.refreshData(true);
+    private findData(): void {
+        this.stopData();
+        this._updateTimer = setInterval(async () => this.refreshData(), 1000);
     }
 
     /**
@@ -143,23 +157,15 @@ class Reading extends Component<ReadingProps, ReadingState> {
 
     /**
      * Refresh the data.
-     * @param forceStart Force the start.
      */
-    private async refreshData(forceStart?: boolean): Promise<void> {
-        if (this._updateTimer || forceStart) {
-            const response1 = await this._apiClient.getAnnotations(this.props.sensorReading.reading_id);
-            const response2 = await this._apiClient.getConfidenceScore(this.props.sensorReading.reading_id);
+    private async refreshData(): Promise<void> {
+        const response1 = await this._apiClient.getAnnotations(this.props.sensorReading.reading_id);
+        const response2 = await this._apiClient.getConfidenceScore(this.props.sensorReading.reading_id);
 
-            this.setState({
-                readingAnnotations: response1,
-                confidenceScore: response2 ? response2.confidence_score : 0
-            });
-
-            if (this._updateTimer) {
-                clearTimeout(this._updateTimer);
-            }
-            this._updateTimer = setTimeout(async () => this.refreshData(), 1000);
-        }
+        this.setState({
+            readingAnnotations: response1,
+            confidenceScore: response2 ? response2.confidence_score : 0
+        });
     }
 }
 

@@ -111,7 +111,10 @@ class Explorer extends Component<unknown, ExplorerState> {
 
                                 {this.state.sensorReadings?.map((s, idx) => (
                                     <React.Fragment key={idx}>
-                                        <Reading sensorReading={s} />
+                                        <Reading
+                                            sensorReading={s}
+                                            isActive={this.state.statusBusy}
+                                        />
                                     </React.Fragment>
                                 ))}
                             </div>
@@ -130,8 +133,8 @@ class Explorer extends Component<unknown, ExplorerState> {
             statusBusy: true,
             status: "Looking for data...",
             sensorReadings: undefined
-        }, async () => {
-            await this.refreshData();
+        }, () => {
+            this._updateTimer = setInterval(async () => this.refreshData(), 1000);
         });
     }
 
@@ -150,18 +153,11 @@ class Explorer extends Component<unknown, ExplorerState> {
      * Refresh the data.
      */
     private async refreshData(): Promise<void> {
-        if (this.state.statusBusy) {
-            const response = await this._apiClient.getReadings(this.state.query);
+        const response = await this._apiClient.getReadings(this.state.query);
 
-            this.setState({
-                sensorReadings: response
-            });
-
-            if (this._updateTimer) {
-                clearTimeout(this._updateTimer);
-            }
-            this._updateTimer = setTimeout(async () => this.refreshData(), 1000);
-        }
+        this.setState({
+            sensorReadings: response
+        });
     }
 }
 
