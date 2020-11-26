@@ -3,6 +3,7 @@ import { FetchHelper } from "../helpers/fetchHelper";
 import { IConfidenceScore } from "../models/api/IConfidenceScore";
 import { IReadingAnnotation } from "../models/api/IReadingAnnotation";
 import { ISensorReading } from "../models/api/ISensorReading";
+import { IAnnotationQuery} from "../models/api/IAnnotationQuery";
 
 /**
  * Service to handle the REST requests.
@@ -85,6 +86,33 @@ export class ApiClient {
                     reading_id: readingId
                 }
             );
+        } catch {
+        }
+
+        return response;
+    }
+
+    /**
+     * Get filtered annotations from provided filters.
+     * @param query Query parameters.
+     * @returns The annotations.
+     */
+    public async filterAnnotations(query: IAnnotationQuery): Promise<IReadingAnnotation[] | undefined> {
+        let response: IReadingAnnotation[] | undefined;
+        try {
+            const responseWrapped = await FetchHelper.json<unknown, { annotation: IReadingAnnotation }[]>(
+                this._endpoint,
+                "get_filtered_annotations",
+                "post",
+                {
+                    iss: query.iss,
+                    sub: query.sub,
+                    iat: query.iat,
+                    jti: query.jti,
+                    ann: query.ann
+                }
+            );
+            response = responseWrapped?.map(a => a.annotation);
         } catch {
         }
 

@@ -1,10 +1,17 @@
 import { ISensorReading } from "../../models/api/ISensorReading";
+import { IAnnotationQuery} from "../../models/api/IAnnotationQuery";
+import {IReadingAnnotation} from "../../models/api/IReadingAnnotation";
 
 export interface ExplorerState {
     /**
      * The query for the search.
      */
-    query: string;
+    sensor: string;
+
+    /**
+     * Query data for filtered search.
+     */
+    query: IAnnotationQuery;
 
     /**
      * Is the form busy.
@@ -20,4 +27,9 @@ export interface ExplorerState {
      * The sensor readings.
      */
     sensorReadings?: ISensorReading[];
+
+    /**
+     * The annotations
+     */
+    readingAnnotations?: IReadingAnnotation[];
 }
