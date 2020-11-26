@@ -9,6 +9,7 @@ The defaults are:
 ```json
 {
     "apiEndpoint": "http://localhost:8080"
+    "sensorIds": ["TestSensor3"]
 }
 ```
 
