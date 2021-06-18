@@ -23,5 +23,6 @@ body {
   #root {
     display: flex;
     flex: 1;
+    min-height: fit-content;
   }
 }
