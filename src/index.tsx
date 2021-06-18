@@ -28,5 +28,5 @@ initServices()
  * Initialise the services.
  */
 async function initServices(): Promise<void> {
-    ServiceFactory.register("api-client", () => new ApiClient(config.apiEndpoint));
+    ServiceFactory.register("api-client", () => new ApiClient(config.apiEndpoint, config.simulatorEndpoint));
 }

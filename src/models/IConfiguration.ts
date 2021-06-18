@@ -4,6 +4,8 @@ export interface IConfiguration {
      */
     apiEndpoint: string;
 
+    simulatorEndpoint: string;
+
     /**
      * The predefined sensor identifiers.
      */

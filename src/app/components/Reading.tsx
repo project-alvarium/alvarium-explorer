@@ -85,7 +85,7 @@ class Reading extends Component<ReadingProps, ReadingState> {
                             Confidence Score
                         </div>
                         <div className="card--value">
-                            {this.state.confidenceScore}
+                            {`${String(this.state.confidenceScore)}%`}
                         </div>
                         {this.state.readingAnnotations?.map((annotation, idx) => (
                             <div className="annotation" key={idx}>
@@ -164,7 +164,7 @@ class Reading extends Component<ReadingProps, ReadingState> {
 
         this.setState({
             readingAnnotations: response1,
-            confidenceScore: response2 ? response2.confidence_score : 0
+            confidenceScore: response2 ? response2.confidence_score / 10 * 100 : 0
         });
     }
 }
