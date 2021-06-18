@@ -1,15 +1,14 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
+/* eslint-disable @typescript-eslint/no-require-imports */
 import React, { Component, ReactNode } from "react";
 import { ApiClient } from "../../clients/apiClient";
 import { ServiceFactory } from "../../factories/serviceFactory";
 import { DateHelper } from "../../helpers/dateHelper";
-import { IConfiguration } from "../../models/IConfiguration";
 import Reading from "../components/Reading";
 import Spinner from "../components/Spinner";
 import "./Explorer.scss";
 import { ExplorerState } from "./ExplorerState";
 
-// eslint-disable-next-line @typescript-eslint/no-require-imports
-const config: IConfiguration = require("../../assets/config/config.json");
 
 /**
  * Explorer panel.
@@ -36,6 +35,7 @@ class Explorer extends Component<unknown, ExplorerState> {
 
         this.state = {
             sensor: "",
+            startAddress: "",
             query: {
                 iss: null,
                 sub: null,
@@ -43,9 +43,22 @@ class Explorer extends Component<unknown, ExplorerState> {
                 jti: null,
                 ann: null
             },
+            subReq: {
+                Node: "http://localhost:14265",
+                Address: "",
+                TickRate: 3,
+                Id: "SensorId"
+            },
+            sensors: [],
+            firstRun: true,
             statusBusy: false,
             status: ""
         };
+    }
+
+    // eslint-disable-next-line @typescript-eslint/explicit-member-accessibility
+    componentDidMount(): void {
+        this.getStartAddress();
     }
 
     /**
@@ -53,24 +66,6 @@ class Explorer extends Component<unknown, ExplorerState> {
      * @returns The node to render.
      */
     public render(): ReactNode {
-        const sensors = [];
-        let i = 0;
-        for (i; i < config.sensorIds.length; i++) {
-            const sensorId = config.sensorIds[i];
-            sensors.push(
-                <button
-                    type="button"
-                    className="form-button selected margin-r-t margin-b-t"
-                    onClick={() => {
-                        this.setState({ sensor: sensorId });
-                        this.findData();
-                    }}
-                    disabled={this.state.statusBusy}
-                >
-                    {sensorId}
-                </button>
-            );
-        }
         return (
             <div className="explorer">
                 <div className="wrapper">
@@ -83,10 +78,111 @@ class Explorer extends Component<unknown, ExplorerState> {
                                         <h2>Sensors</h2>
                                     </div>
                                     <div className="card--content">
+                                        <div className="row middle margin-b-s row--tablet-responsive">
+                                            <div className="card--label form-label-width">
+                                                Sensor Id
+                                            </div>
+                                            <input
+                                                type="text"
+                                                value={this.state.subReq.Id ? this.state.subReq.Id : ""}
+                                                onChange={e => {
+                                                    const subReq = this.state.subReq;
+                                                    subReq.Id = e.target.value;
+                                                    this.setState({ subReq });
+                                                }}
+                                                disabled={this.state.statusBusy}
+                                                className="form-input-long"
+                                            />
+                                        </div>
+
+                                        <div className="row middle margin-b-s row--tablet-responsive">
+                                            <div className="card--label form-label-width">
+                                                Address
+                                            </div>
+                                            <input
+                                                type="text"
+                                                value={this.state.startAddress ? this.state.startAddress : ""}
+                                                onChange={e => {
+                                                    const subReq = this.state.subReq;
+                                                    subReq.Address = e.target.value;
+                                                    this.setState({
+                                                        startAddress: e.target.value,
+                                                        subReq
+                                                    });
+                                                }}
+                                                disabled={this.state.statusBusy}
+                                                className="form-input-long"
+                                            />
+                                        </div>
+
+                                        <div className="row middle margin-b-s row--tablet-responsive">
+                                            <div className="card--label form-label-width">
+                                                Node Url
+                                            </div>
+                                            <input
+                                                type="text"
+                                                value={this.state.subReq.Node ? this.state.subReq.Node : ""}
+                                                onChange={e => {
+                                                    const subReq = this.state.subReq;
+                                                    subReq.Node = e.target.value;
+                                                    this.setState({ subReq });
+                                                }}
+                                                disabled={this.state.statusBusy}
+                                                className="form-input-long"
+                                            />
+                                        </div>
+                                        <div className="row middle margin-b-s row--tablet-responsive">
+                                            <div className="card--label form-label-width">
+                                                Tick Rate
+                                            </div>
+                                            <input
+                                                type="text"
+                                                value={this.state.subReq.TickRate ? this.state.subReq.TickRate : ""}
+                                                onChange={e => {
+                                                    const subReq = this.state.subReq;
+                                                    subReq.TickRate = Number(e.target.value);
+                                                    this.setState({ subReq });
+                                                }}
+                                                disabled={this.state.statusBusy}
+                                                className="form-input-long"
+                                            />
+                                        </div>
+                                        <div className="row margin-b-s row--tablet-responsive">
+                                            <div className="card--label form-label-width">
+                                                &nbsp;
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className="card--content">
+
                                         <div className="row center margin-b-s row--tablet-responsive">
-                                            {sensors}
+                                            {this.state.sensors?.map((id, index) => (
+                                                <button
+                                                    type="button"
+                                                    key={index}
+                                                    className="form-button selected margin-r-t margin-b-t"
+                                                    onClick={() => {
+                                                        this.setState({ sensor: id });
+                                                        this.findData();
+                                                    }}
+                                                    disabled={this.state.statusBusy}
+                                                >
+                                                    {id}
+                                                </button>
+                                            ))}
                                         </div>
                                         <div className="row center margin-b-s row--tablet-responsive">
+                                            <button
+                                                type="button"
+                                                className="form-button selected margin-r-t margin-b-t"
+                                                onClick={() => {
+this.addSub();
+}}
+                                                disabled={this.state.statusBusy || this.state.subReq.Address === ""}
+                                            >
+                                                Add Sensor
+                                            </button>
+
                                             <button
                                                 type="button"
                                                 className="form-button selected margin-r-t margin-b-t"
@@ -355,7 +451,10 @@ class Explorer extends Component<unknown, ExplorerState> {
      * Clear readings from state
      */
     private clearData(): void {
-        this.setState({ sensorReadings: undefined });
+        this.setState({
+            sensorReadings: undefined,
+            sensors: []
+        });
     }
 
     /**
@@ -374,6 +473,26 @@ class Explorer extends Component<unknown, ExplorerState> {
             this._updateTimer = undefined;
         }
         this.setState({ statusBusy: false, status: "" });
+    }
+
+    private addSub(): void {
+        const id = this.state.subReq.Id;
+        this.setState({
+            statusBusy: true,
+            status: "Adding new sensor..."
+        }, async () => {
+            await this.sendReqs().then(_resp => {
+                console.log("Adding to sensor list:", id);
+                const sensorList = this.state.sensors;
+                sensorList?.push(id);
+
+                this.setState({
+                    sensors: sensorList,
+                    status: "Sensor added",
+                    statusBusy: false
+                });
+            });
+        });
     }
 
     /**
@@ -408,6 +527,45 @@ class Explorer extends Component<unknown, ExplorerState> {
         this.setState({
             readingAnnotations: response
         });
+    }
+
+    private getStartAddress(): void {
+        const addr = "";
+        this.setState({
+            startAddress: addr,
+            status: "Fetching Address..."
+        }, async () => {
+            await this._apiClient.fetchAddress().then(address => {
+                if (address !== undefined) {
+                    // eslint-disable-next-line no-new-object
+                    const ann = address.announcement_id;
+                    const subReq = this.state.subReq;
+                    subReq.Address = ann;
+
+                    console.log(ann);
+
+                    this.setState({
+                        startAddress: ann,
+                        status: "Address set",
+                        subReq
+                    });
+                }
+            });
+        });
+    }
+
+    private async sendReqs(): Promise<void> {
+        const sensorQuery = { ...this.state.subReq };
+        console.log("adding a new sensor");
+        await this._apiClient.addNewSub(sensorQuery, "sensors");
+        if (this.state.firstRun) {
+            this.setState({ status: "Spawning Annotator..." });
+            sensorQuery.Id = "Annotators";
+            sensorQuery.TickRate = 5;
+            console.log("adding a new annotator");
+            await this._apiClient.addNewSub(sensorQuery, "annotators");
+            this.setState({ status: "Annotator spawned...", firstRun: false });
+        }
     }
 }
 

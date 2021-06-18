@@ -9,10 +9,10 @@
     },
     "license": "MIT",
     "dependencies": {
-        "classnames": "^2.2.6",
+        "classnames": "^2.3.1",
         "moment": "^2.29.1",
-        "react": "^17.0.1",
-        "react-dom": "^17.0.1",
+        "react": "^17.0.2",
+        "react-dom": "^17.0.2",
         "react-icons": "^3.11.0",
         "react-router-dom": "^5.2.0",
         "react-scripts": "^3.4.3"
@@ -21,7 +21,7 @@
         "node": "12.x.x"
     },
     "scripts": {
-        "start": "cross-env PORT=9090 craco start",
+        "start": "cross-env PORT=9191 craco start",
         "lint": "eslint src --ext .tsx,.ts",
         "build-internal": "craco build",
         "build": "run-s lint build-internal",
@@ -36,23 +36,23 @@
         "not op_mini all"
     ],
     "devDependencies": {
-        "@craco/craco": "^5.8.0",
-        "@types/classnames": "^2.2.11",
-        "@types/node": "^14.14.9",
-        "@types/react": "^17.0.0",
-        "@types/react-dom": "^17.0.0",
-        "@types/react-router-dom": "^5.1.6",
-        "@typescript-eslint/eslint-plugin": "^4.8.1",
-        "@typescript-eslint/parser": "^4.8.1",
-        "cross-env": "^7.0.2",
-        "eslint": "^7.14.0",
-        "eslint-plugin-import": "^2.22.1",
-        "eslint-plugin-jsdoc": "^30.7.8",
-        "eslint-plugin-react": "^7.21.5",
+        "@craco/craco": "^5.9.0",
+        "@types/classnames": "^2.3.1",
+        "@types/node": "^14.17.3",
+        "@types/react": "^17.0.11",
+        "@types/react-dom": "^17.0.8",
+        "@types/react-router-dom": "^5.1.7",
+        "@typescript-eslint/eslint-plugin": "^4.27.0",
+        "@typescript-eslint/parser": "^4.27.0",
+        "cross-env": "^7.0.3",
+        "eslint": "^7.28.0",
+        "eslint-plugin-import": "^2.23.4",
+        "eslint-plugin-jsdoc": "^30.7.13",
+        "eslint-plugin-react": "^7.24.0",
         "eslint-plugin-unicorn": "^23.0.0",
         "node-sass": "^4.14.1",
         "npm-run-all": "^4.1.5",
         "sass-lint": "^1.13.1",
-        "typescript": "^4.1.2"
+        "typescript": "^4.3.4"
     }
 }

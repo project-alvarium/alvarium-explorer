@@ -1,9 +1,11 @@
 /* eslint-disable camelcase */
 import { FetchHelper } from "../helpers/fetchHelper";
+import { IAddressReturn } from "../models/api/IAddressReturn";
+import { IAnnotationQuery } from "../models/api/IAnnotationQuery";
 import { IConfidenceScore } from "../models/api/IConfidenceScore";
 import { IReadingAnnotation } from "../models/api/IReadingAnnotation";
 import { ISensorReading } from "../models/api/ISensorReading";
-import { IAnnotationQuery} from "../models/api/IAnnotationQuery";
+import { ISubRequest } from "../models/api/ISubRequest";
 
 /**
  * Service to handle the REST requests.
@@ -14,12 +16,16 @@ export class ApiClient {
      */
     private readonly _endpoint: string;
 
+    private readonly _other_endpoint: string;
+
     /**
      * Create a new instance of ApiClient.
-     * @param endpoint The endpoint for the requests.
+     * @param endpoint The endpoint for the author console requests.
+     * @param otherEndpoint endpoint of the simulator
      */
-    constructor(endpoint: string) {
+    constructor(endpoint: string, otherEndpoint: string) {
         this._endpoint = endpoint.replace(/\/+$/, "");
+        this._other_endpoint = otherEndpoint.replace(/\/+$/, "");
     }
 
     /**
@@ -117,5 +123,32 @@ export class ApiClient {
         }
 
         return response;
+    }
+
+    public async fetchAddress(): Promise<IAddressReturn | undefined> {
+        const address = await FetchHelper.json<undefined, IAddressReturn>(
+            this._endpoint,
+            "get_announcement_id",
+            "get"
+        );
+        return address;
+    }
+
+    public async addNewSub(query: ISubRequest, type: string) {
+        try {
+            console.log("Type:", type);
+            await FetchHelper.json<unknown, unknown>(
+                this._other_endpoint,
+                `/api/${type}`,
+                "post",
+                {
+                    Node: query.Node,
+                    Address: query.Address,
+                    Id: query.Id,
+                    TickRate: query.TickRate
+                }
+            );
+        } catch {
+        }
     }
 }
